@@ -1,0 +1,5 @@
+﻿#import "core/core.si"
+
+main :: () -> void
+{
+}

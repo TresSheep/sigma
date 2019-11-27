@@ -1,0 +1,43 @@
+$TRIM newline
+$SPACE Backend::CodeGen
+
+> return :: return RETURN;
+> call :: return CALL;
+> decl :: return DECL;
+> global :: return GLOBAL;
+> mov :: return MOVE;
+> extern :: return EXTERN;
+> cmp :: return CMP;
+> add :: return ADD;
+> struct :: return STRUCT;
+> array :: return ARRAY;
+> forward :: return FORWARD;
+> modulo :: return MODULO;
+> div :: return DIV;
+> union :: return UNION;
+> address_of :: return ADDRESS_OF;
+
+> element :: return ELEMENT;
+
+> je :: return JE;
+> jne :: return JNE;
+> jmp :: return JMP;
+
+> * :: return POINTER;
+
+> { :: return OPEN_BLOCK;
+> } :: return CLOSE_BLOCK;
+> ( :: return OPEN_P;
+> ) :: return CLOSE_P;
+
+> " [ALL] " :: return STRING;
+
+> [A-Z][a-z]*[numb] :: return IDENTIFIER;
+> [numb] :: return NUMBER;
+
+> % :: return PERCENT;
+> : :: return COLON;
+> . :: return DOT;
+> ; :: return END_STATEMENT
+> - :: return MINUS;
+> , :: return COMMA;

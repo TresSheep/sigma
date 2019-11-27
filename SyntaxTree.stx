@@ -1,0 +1,13 @@
+Function ::= IDENTIFIER->id PROTO_SEPARATOR OPEN_P ..(IDENTIFIER->id SEPARATOR IDENTIFIER->type | COMMA) CLOSE_P ARROW IDENTIFIER->type OPEN_BLOCK Statement CLOSE_BLOCK;
+
+Decl ::= VAR IDENTIFIER->id SEPARATOR IDENTIFIER->type {
+	| VAR IDENTIFIER->id MUL->ptr SEPARATOR IDENTIFIER->type
+}
+
+Expression ::= ( Expression ) {
+	| Decl
+}
+
+Statement ::= Expr + ';' {
+	| Function
+}

@@ -1,0 +1,16 @@
+$TRIM newline;
+$IGNORE //;
+
+> import :: return IMPORT;
+
+> :: :: return PROTO_SEPARATOR;
+> ( :: return OPEN_P;
+> ) :: return CLOSE_P;
+> -> :: return ARROW;
+> * :: return POINTER;
+> : :: return COLON;
+> , :: return COMMA;
+> # :: return HASH;
+> " [ALL] " :: return STRING;
+
+> [A-Z][a-z]*[numb] :: return IDENTIFIER;

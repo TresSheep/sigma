@@ -1,0 +1,42 @@
+foreign glfwInit :: () -> void;
+foreign glfwTerminate :: () -> void;
+foreign glfwCreateWindow :: (width: int, height: int, title: string, monitor*: int, share*: int) -> int*;
+foreign glfwDestroyWindow :: (window*: int) -> void;
+foreign glfwWindowShouldClose :: (window*: int) -> int;
+foreign glfwMakeContextCurrent :: (window*: int) -> void;
+foreign glfwSwapBuffers :: (window*: int) -> void;
+foreign glfwPollEvents :: () -> void;
+foreign glClear :: (flag: int) -> void;
+
+create_window :: (name: string) -> int*
+{
+	glfwInit();
+
+	var window*: int = glfwCreateWindow(1024, 768, name, 0, 0);
+
+	glfwMakeContextCurrent(window);
+
+	ret -> window;
+}
+
+destroy_window :: (window*: int) -> void
+{
+	glfwDestroyWindow(window);
+}
+
+should_close :: (window*: int) -> int
+{
+	var i: int = glfwWindowShouldClose(window);
+	ret -> i;
+}
+
+update_window :: (window*: int) -> void
+{
+	glfwPollEvents();
+}
+
+clear_window :: (window*: int) -> void
+{
+	glClear(16384);
+	glfwSwapBuffers(window);
+}

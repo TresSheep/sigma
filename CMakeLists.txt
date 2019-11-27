@@ -1,0 +1,34 @@
+cmake_minimum_required(VERSION 3.9)
+
+#set(CMAKE_C_COMPILER "clang-cl")
+#set(CMAKE_CXX_COMPILER "clang-cl")
+
+project (sigma)
+
+ADD_DEFINITIONS(-DUNICODE)
+ADD_DEFINITIONS(-D_UNICODE)
+
+set(CMAKE_CXX_FLAGS "/std:c++latest /EHsc")
+#set(CMAKE_CXX_FLAGS "-std=c++17 -lstdc++fs")
+
+include_directories(${PROJECT_SOURCE_DIR}/src)
+include_directories(${PROJECT_SOURCE_DIR}/lib)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
+set(CMAKE_PDB_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
+
+file(GLOB_RECURSE SRC_FILES ${PROJECT_SOURCE_DIR}/src/*.cpp)
+
+add_executable(sigma ${SRC_FILES})
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    ADD_DEFINITIONS(-DWINDOWS)
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    ADD_DEFINITIONS(-DLINUX)
+endif()
+
+if (${CMAKE_BUILD_TYPE} MATCHES "Debug")
+    ADD_DEFINITIONS(-DDEBUG)
+endif()

@@ -1,0 +1,24 @@
+Expression :
+	Expression <EQUAL> Expression
+	{
+		if $1 is String { !Error "lhs cannot be a string"; }
+
+		Assignment $1 $3;
+	}
+
+	<IDENTIFIER>
+	{
+		Identifier $1;
+	}
+
+	<STRING>
+	{
+		String $1;
+	}
+
+Statement :
+	Expression <END_STATEMENT>
+	{
+		if $1 is String or Identifier { !Error "Invalid statement"; }
+		!Generate $1;
+	}

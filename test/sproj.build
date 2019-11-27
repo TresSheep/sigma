@@ -1,0 +1,17 @@
+// ----------------------------------------------------------------------------
+//
+// sigma build file. Contains all sigma build related things.
+// To run the compiler: sigma sproj.build
+//
+// ----------------------------------------------------------------------------
+
+SRC_PATH = "B:/sigma/test/src/" ;
+LIB_PATH = "B:/sigma/test/lib/" ;
+BIN_PATH = "B:/sigma/test/bin/" ;
+
+// Or SET_LINKER = SIGMA; For sigma linker
+LINKER = SIGMA; // For Microsoft linker
+TARGET = X64;
+PLATFORM = WINDOWS;
+BINARY = "output";
+TYPE = RELEASE;

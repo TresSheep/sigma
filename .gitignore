@@ -1,0 +1,11 @@
+/.vs
+CMakeSettings.json
+eplus.kdev4
+/Debug
+/bin
+eplus.cbp
+eplus.layout
+/Default/
+/build/
+/.vs/slnx.sqlite
+/.vs/slnx.sqlite-journal

@@ -1,0 +1,9 @@
+$IGNORE //;
+
+> = :: return EQUAL;
+> ; :: return END_STATEMENT;
+
+> " [ALL] " :: return STRING;
+
+> [A-Z][a-z]*[numb] :: return IDENTIFIER;
+> [numb] :: return NUMBER;

@@ -1,0 +1,265 @@
+namespace "Backend::CodeGen::Asm"
+header "Backend/CodeGen/Asm/AST/AST.h"
+
+EXPR_PROTOTYPE_BEGIN: IDENTIFIER->type :: IDENTIFIER->id :: OPEN_P;
+EXPR_PROTOTYPE_BEGIN: IDENTIFIER->type :: POINTER->ptr :: IDENTIFIER->id :: OPEN_P;
+
+EXPR_VARIABLE: DECL :: IDENTIFIER->id :: IDENTIFIER->type :: POINTER->ptr;
+EXPR_VARIABLE: DECL :: IDENTIFIER->id :: IDENTIFIER->type;
+
+EXPR_BLOCK: IDENTIFIER->id :: COLON;
+
+EXPR_OPEN_BLOCK: OPEN_BLOCK;
+EXPR_CLOSE_BLOCK: CLOSE_BLOCK;
+EXPR_MOVE: MOVE;
+
+EXPR_CONSTANT: IDENTIFIER->type :: NUMBER->num;
+EXPR_CONSTANT: IDENTIFIER->type :: MINUS->minus :: NUMBER->num;
+
+EXPR_ARRAY: ARRAY :: IDENTIFIER->type :: IDENTIFIER->id :: NUMBER->size;
+
+EXPR_UNION: UNION :: IDENTIFIER->id;
+
+EXPR_CALL: CALL;
+
+EXPR_ELEMENT: ELEMENT;
+
+EXPR_RETURN: RETURN;
+
+EXPR_COMMA: COMMA;
+EXPR_MINUS: MINUS;
+EXPR_MODULO: MODULO;
+EXPR_DIV: DIV;
+
+EXPR_CALL_OPEN: IDENTIFIER->id :: OPEN_P;
+
+EXPR_CLOSE_P: CLOSE_P;
+
+EXPR_STRING: IDENTIFIER->type :: POINTER->ptr :: STRING->str;
+EXPR_STRING: IDENTIFIER->type :: STRING->str;
+
+EXPR_JUMP: JE->id;
+EXPR_JUMP: JNE->id;
+EXPR_JUMP: JMP->id;
+
+EXPR_CMP: CMP;
+
+EXPR_ADD: ADD;
+
+EXPR_STRUCT: STRUCT :: IDENTIFIER->id;
+
+EXPR_VARIABLE_USAGE: ADDRESS_OF->lval :: IDENTIFIER->id;
+EXPR_VARIABLE_USAGE: IDENTIFIER->id :: POINTER->ptr;
+EXPR_VARIABLE_USAGE: IDENTIFIER->id;
+
+EXPR_END_STATEMENT: END_STATEMENT;
+
+EXPR_EXTERN: EXTERN;
+EXPR_FORWARD: FORWARD;
+
+FREESTANDING:
+	ExternFunction ::
+	ForwardFunction ::
+	Function ::
+	Struct ::
+	Union
+	;
+	
+END_EXPR:
+	Block ::
+	Decl ::
+	Move ::
+	Call ::
+	Compare ::
+	Jump ::
+	Element ::
+	Add ::
+	Return ::
+	Array ::
+	Div ::
+	Modulo
+	;
+
+Prototype -> Prototype:
+{
+	case EXPR_PROTOTYPE_BEGIN ..(EXPR_VARIABLE, EXPR_COMMA) EXPR_CLOSE_P
+	{
+		create Prototype($1->id, $2, $3->type);
+	}
+}
+
+Struct -> Struct:
+{
+	case EXPR_STRUCT EXPR_OPEN_BLOCK ..(statement) EXPR_CLOSE_BLOCK
+	{
+		create Struct($1->id, $3);
+	}
+}
+
+Union -> Union:
+{
+	case EXPR_UNION EXPR_OPEN_BLOCK ..(statement) EXPR_CLOSE_BLOCK
+	{
+		create Union($1->id, $3);
+	}
+}
+
+Negative -> Expression:
+{
+	case EXPR_MINUS $2
+	{
+		create Negative($2);
+	}
+}
+
+Array -> Expression:
+{
+	case EXPR_ARRAY
+	{
+		create Array($1->type, $1->id, $1->size);
+	}
+}
+
+Add -> Expression:
+{
+	case EXPR_ADD $2 statement
+	{
+		create Add($2, $3);
+	}
+	case EXPR_ADD $2 $3
+	{
+		create Add($2, $3);
+	}
+}
+
+Modulo -> Expression:
+{
+	case EXPR_MODULO $2 statement
+	{
+		create Modulo($2, $3);
+	}
+	case EXPR_MODULO $2 $3
+	{
+		create Modulo($2, $3);
+	}
+}
+
+Div -> Expression:
+{
+	case EXPR_DIV $2 statement
+	{
+		create Div($2, $3);
+	}
+	case EXPR_DIV $2 $3
+	{
+		create Div($2, $3);
+	}
+}
+
+Return -> Expression:
+{
+	case EXPR_RETURN expr
+	{
+		create Return($2);
+	}
+	case EXPR_RETURN $2
+	{
+		create Return($2);
+	}
+}
+
+Element -> Expression:
+{
+	case EXPR_ELEMENT $2 $3
+	{
+		create Element($2, $3);
+	}
+}
+
+Block -> Expression:
+{
+	case EXPR_BLOCK
+	{
+		create Block($1->id);
+	}
+}
+
+Decl -> Expression:
+{
+	case EXPR_VARIABLE
+	{
+		create Decl($1->id, $1->type, $1->ptr);
+	}
+}
+
+Move -> Expression:
+{
+	case EXPR_MOVE statement statement
+	{
+		create Move($2, $3);
+	}
+	case EXPR_MOVE statement $3
+	{
+		create Move($2, $3);
+	}
+	case EXPR_MOVE $2 statement
+	{
+		create Move($2, $3);
+	}
+	case EXPR_MOVE $2 $3
+	{
+		create Move($2, $3);
+	}
+}
+
+Call -> Expression:
+{
+	case EXPR_CALL EXPR_CALL_OPEN ..(node_or_expr, EXPR_COMMA) EXPR_CLOSE_P
+	{
+		create Call($2->id, $2->type, $3);
+	}
+}
+
+Compare -> Expression:
+{
+	case EXPR_CMP statement $3
+	{
+		create Compare($2, $3);
+	}
+	case EXPR_CMP $2 $3
+	{
+		create Compare($2, $3);
+	}
+}
+
+Jump -> Expression:
+{
+	case EXPR_JUMP EXPR_VARIABLE_USAGE
+	{
+		create Jump($1->id, $2->id);
+	}
+}
+
+ForwardFunction -> ForwardFunction:
+{
+	case EXPR_FORWARD Prototype
+	{
+		create ForwardFunction($2);
+	}
+}
+
+ExternFunction -> ExternFunction:
+{
+	case EXPR_EXTERN Prototype
+	{
+		create ExternFunction($2);
+	}
+}
+
+Function -> Function:
+{
+	case Prototype EXPR_OPEN_BLOCK ..(statement) EXPR_CLOSE_BLOCK
+	{
+		create Function($1, $3);
+	}
+}

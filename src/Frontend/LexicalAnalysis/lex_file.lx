@@ -1,0 +1,47 @@
+$TRIM newline;
+$IGNORE //;
+
+> var :: return VAR;
+> ret :: return RET;
+> foreign :: return FOREIGN;
+> null :: return _NULL;
+> struct :: return STRUCT;
+> union :: return UNION;
+> impl :: return IMPL;
+
+> == :: return LOG_EQUAL;
+> /= :: return LOG_NEQ;
+
+> -> :: return ARROW;
+
+> = :: return EQUAL;
+> + :: return PLUS;
+> * :: return MUL;
+> - :: return MINUS;
+> := :: return AUTO;
+> % :: return MODULO;
+> & :: return AND;
+
+> . :: return DOT;
+
+> if :: return IF;
+> repeat :: return REPEAT;
+
+> :: :: return PROTO_SEPARATOR;
+> : :: return SEPARATOR;
+> ( :: return OPEN_P;
+> ) :: return CLOSE_P;
+> { :: return OPEN_BLOCK;
+> } :: return CLOSE_BLOCK;
+> ; :: return END_STATEMENT;
+> [ :: return OPEN_BRACKET;
+> ] :: return CLOSE_BRACKET;
+
+> " [ALL] " :: return STRING;
+
+> [A-Z][a-z]*[numb] :: return IDENTIFIER;
+> [numb] :: return NUMBER;
+> / :: return SLASH;
+> , :: return COMMA;
+> * :: return POINTER;
+> : :: return COLON;

@@ -1,0 +1,19 @@
+foreign luaL_newstate :: () -> int*;
+foreign luaL_openlibs :: (state*: int) -> void;
+foreign luaL_loadfilex :: (state*: int, filename: string, nan*: int) -> int;
+foreign lua_pcallk :: (state*: int, a: int, b: int, c: int, d: int, e*: int) -> void;
+
+create_lua_script :: () -> int*
+{
+	var lua_state*: int = luaL_newstate();
+
+	luaL_openlibs(lua_state);
+
+	ret -> lua_state;
+}
+
+run_lua_script :: (state*: int, filename: string) -> void
+{
+	luaL_loadfilex(state, filename, 0);
+	lua_pcallk(state, 0, 0, 0, 0, 0);
+}
